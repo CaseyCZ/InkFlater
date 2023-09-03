@@ -460,55 +460,37 @@
 		            </div><!-- content end -->
 		        </div><!-- section-5 end -->
 
-		        <div id="section-6">
-		            <div class="content relative-position center-aligned bg-background">
-		            	<div class="frame">
-			            	<h2 class="font-type-default">Kontaktuj nás</h2>
-			            	<p>Potrebujete si naplánovať stretnutie? Použite kontaktný formulár nižšie<br />
-							alebo nám zavolajte na číslo <a href="tel:+421 949 698 018"><strong>+421 949 698 018</strong></a></p>
-			            	<div class="contact-us has-xlarge-top-margin left-aligned">
-			            		<div class="frame xxsmall relative-position z-index has-small-y-padding">
-				            		<form action="#" method="POST" name="contact_form" accept-charset="utf-8" class="contact_form">
-			            				<div class="field-holder">
-			            					<input type="text" name="name" placeholder="Name" />
-			            				</div><!-- field-holder end -->
-			            				<div class="field-holder">
-			            					<input type="email" name="email" placeholder="Email" />
-			            				</div><!-- field-holder end -->
-			            				<div class="field-holder">
-			            					<input type="tel" name="mobile" placeholder="Mobile" class="number-field" />
-			            				</div><!-- field-holder end -->
-			            				<div class="field-holder">
-			            					<input type="text" name="subject" placeholder="Subject" />
-			            				</div><!-- field-holder end -->
-			            				<div class="field-holder">
-			            					<textarea name="message" placeholder="Message..."></textarea>
-			            				</div><!-- field-holder end -->
-			            				<input type="text" class="samanira_secure" name="samanira_secure" />
-			            				<input type="submit" value="contact" />
-				            		</form>
-				            		<div class="thank-you">
-				            			<div class="table-display">
-				            				<div class="table-cell-display vertical-aligned">
-				            					<h2>Ďakujeme!</h2>
-				            					<p>Čoskoro sa vám ozveme:)</p>
-				            				</div><!-- table-cell-display end -->
-				            			</div><!-- table-display end -->
-				            		</div><!-- thank-you end -->
-			            		</div><!-- frame xxsmall end -->
-			            	</div><!-- contact-us end -->
-		            	</div><!-- frame end -->
-		            </div><!-- content end -->
-
-		        </div><!-- section-6 end -->
-
-			</div><!-- body end -->
-
+				<div id="section-6">
+					<div class="content relative-position center-aligned bg-background">
+						<div class="frame">
+							<h2 class="font-type-default">Kontaktuj nás</h2>
+							<p>Potrebujete si naplánovať stretnutie? Použite kontaktný formulár nižšie<br />
+							alebo <a href="#" id="contact-link"><strong>Contact</strong></a></p>
+							<div class="contact-us has-xlarge-top-margin left-aligned">
+								<div class="frame xxsmall relative-position z-index has-small-y-padding">
+									<form action="#" method="POST" name="contact_form" accept-charset="utf-8" class="contact_form">
+										<input type="text" class="samanira_secure" name="samanira_secure" />
+										<input type="submit" value="Odoslať" id="submit-button">
+									</form>
+									<div class="thank-you" style="display: none;">
+										<div class="table-display">
+											<div class="table-cell-display vertical-aligned">
+												<h2>Ďakujeme!</h2>
+												<p>Čoskoro sa vám ozveme:)</p>
+											</div><!-- table-cell-display end -->
+										</div><!-- table-display end -->
+									</div><!-- thank-you end -->
+								</div><!-- frame xxsmall end -->
+							</div><!-- contact-us end -->
+						</div><!-- frame end -->
+					</div><!-- content end -->
+				</div><!-- section-6 end -->
+			</div>
 			<div class="footer has-xxlarge-y-padding">
 				<div class="frame">
 					<div class="section-wrapper">
 						<div class="section cl-4">
-							<strong>InkFlater</strong> - Vytvoril <a class="site-color" href="http://www.SamanirA.com/"><strong>Lukas Kysela</strong></a>
+							<strong>InkFlater</strong> - Vytvoril <a class="site-color" href="https://caseycz.github.io"><strong>Lukas Kysela</strong></a>
 						</div><!-- section cl-4 end -->
 						<div class="section cl-5">
 							<ul class="sitemap">
@@ -531,7 +513,8 @@
 
 			<div id="google-map" class="lightbox gmap">
 				<a href="https://www.google.com/maps/dir/50.7498751,15.0370361/Toplianska+54,+086+41+Raslavice,+Slovensko/" target="_blank">Prejsť na Google Maps</a>
-			<div id="privacy-policy" class="lightbox">
+			</div>
+				<div id="privacy-policy" class="lightbox">
 				<h4>Privacy Policy</h4>
 				<p>Lorem ipsum dolor sit amet, eum ea saepe putent, his in mutat option consequuntur, esse elit reprimique ei mei. Has esse modus salutandi id, has eu utamur efficiendi, brute intellegam duo in. Epicuri dignissim laboramus te eos, debet nostro euismod sea cu. Novum simul partiendo mei in, id quis corpora reprimique nam. Inermis partiendo eu pri, et sea liber laboramus. Soleat volumus fastidii per et, has ei cibo ridens denique.</p>
 				<p>Ad eum omnis nonumy luptatum, ei mel illud principes repudiandae, te sed inimicus similique. Reque antiopam disputando id qui. Vix ut purto docendi, mel cu tamquam iudicabit persecuti. Duo nulla oblique facilisi cu, alterum pertinax philosophia ei his. Nam ponderum convenire aliquando ei. Nibh tation feugait sit ut, eos mollis commodo an.</p>
@@ -565,4 +548,10 @@
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDJjx-gcQgzoZJdu-M9K-lzI_RB4UJN8Xo&amp;v=3.exp&amp;sensor=false"></script>		
 <script type="text/javascript" src="js/project.js"></script>
 	</body>
+	<script>
+		document.getElementById("submit-button").addEventListener("click", function(event) {
+			event.preventDefault();
+			window.location.href = "mailto:zadajte@emailovuadresu.com";
+		});
+		</script>
 </html>
