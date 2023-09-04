@@ -378,7 +378,33 @@
 	background-color: #ffffff;
 	border-radius: 5px;
 }
-
+/* Úprava pro třídu .socials1 */
+.socials1 {
+	display: flex;
+	justify-content: center; /* Horizontálně střední zarovnání obsahu */
+	align-items: center; /* Vertikálně střední zarovnání obsahu */
+  }
+  
+  .socials1 a {
+	display: inline-block;
+	font-size: 35px;
+	color: #d53030;
+	margin: 0 12px; /* Upravený margin pro lepší zarovnání */
+	text-decoration: none; /* Odstranění podtržení odkazů */
+	transition: color 0.3s; /* Animace změny barvy při najetí myší */
+  }
+  
+  .socials1 a:hover {
+	color: #ffffff;
+  }
+.lightbox{
+	display: none;
+	max-width: 620px;
+	font-size: 14px;
+	padding:25px;
+	background-color: #ffffff;
+	border-radius: 5px;
+}
 .lightbox.gmap{padding:12px;}
 
 /*   Added Styles by Back-end   */
