@@ -30,22 +30,25 @@ em{font-family:var(--serif);font-weight:400;font-style:italic}
 .reveal.visible{opacity:1;transform:none}
 
 /* topbar */
-.topbar{position:fixed;z-index:100;top:0;left:0;right:0;height:82px;display:grid;grid-template-columns:180px 1fr auto 150px;align-items:center;gap:24px;padding:0 28px;border-bottom:1px solid rgba(10,10,10,.25);background:rgba(233,226,216,.92);backdrop-filter:blur(16px);transition:height .25s,background .25s}
-.topbar.scrolled{height:68px;background:rgba(233,226,216,.97)}
-.wordmark img{width:132px;height:auto;filter:brightness(.13)}
+.topbar{position:fixed;z-index:100;top:0;left:0;right:0;height:96px;display:grid;grid-template-columns:220px 1fr auto 160px;align-items:center;gap:26px;padding:0 28px;border-bottom:1px solid rgba(10,10,10,.25);background:rgba(233,226,216,.94);backdrop-filter:blur(16px);transition:height .25s,background .25s}
+.topbar.scrolled{height:82px;background:rgba(233,226,216,.98)}
+.wordmark{display:flex;align-items:center;justify-content:center;width:190px;height:76px;padding:6px 12px;background:#090909;overflow:visible;transition:width .25s,height .25s}
+.wordmark img{display:block;width:172px;max-width:100%;max-height:64px;height:auto;object-fit:contain;filter:none;opacity:1}
+.topbar.scrolled .wordmark{width:176px;height:66px}
+.topbar.scrolled .wordmark img{width:158px;max-height:56px}
 .topbar-meta{justify-self:start;display:flex;gap:22px;font-size:8px;font-weight:600;letter-spacing:.15em}
 .nav{display:flex;align-items:center;gap:24px}
-.nav a{font-size:10px;font-weight:600;letter-spacing:.08em;white-space:nowrap}
+.nav a{font-size:11px;font-weight:600;letter-spacing:.075em;white-space:nowrap}
 .nav a span{margin-right:4px;color:#8a837c}
 .nav a:hover,.nav a.active{color:var(--red)}
-.book-link{justify-self:end;display:flex;align-items:center;justify-content:space-between;width:145px;padding:12px 0;border-bottom:1px solid #111;font-size:10px;font-weight:600;letter-spacing:.08em}
+.book-link{justify-self:end;display:flex;align-items:center;justify-content:space-between;width:150px;padding:12px 0;border-bottom:1px solid #111;font-size:11px;font-weight:600;letter-spacing:.075em}
 .book-link span{color:var(--red)}
 .menu-button{display:none}
 
 /* hero */
-.hero{position:relative;min-height:900px;height:100svh;padding-top:82px;overflow:hidden;background:var(--paper)}
-.hero::before{content:"";position:absolute;inset:82px 0 0;background-image:linear-gradient(rgba(10,10,10,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(10,10,10,.08) 1px,transparent 1px);background-size:9.09vw 9.09vw;pointer-events:none}
-.hero-index{position:absolute;z-index:3;top:115px;left:28px;font-size:9px;font-weight:600;letter-spacing:.15em}
+.hero{position:relative;min-height:900px;height:100svh;padding-top:96px;overflow:hidden;background:var(--paper)}
+.hero::before{content:"";position:absolute;inset:96px 0 0;background-image:linear-gradient(rgba(10,10,10,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(10,10,10,.08) 1px,transparent 1px);background-size:9.09vw 9.09vw;pointer-events:none}
+.hero-index{position:absolute;z-index:3;top:128px;left:28px;font-size:9px;font-weight:600;letter-spacing:.15em}
 .hero-type{position:absolute;z-index:1;inset:50% 20px auto;transform:translateY(-51%);font-family:var(--serif);line-height:.72;letter-spacing:-.075em}
 .hero-line{display:flex;align-items:center;justify-content:space-between;white-space:nowrap}
 .hero-line span{font-size:clamp(115px,17vw,300px)}
@@ -200,7 +203,7 @@ em{font-family:var(--serif);font-weight:400;font-style:italic}
 .lightbox-prev{left:14px}.lightbox-next{right:14px}
 
 @media (max-width:1050px){
-  .topbar{grid-template-columns:150px 1fr auto auto}
+  .topbar{grid-template-columns:190px 1fr auto auto}
   .topbar-meta{display:none}
   .hero-photo-a{left:4%}
   .hero-photo-c{right:3%}
@@ -213,9 +216,12 @@ em{font-family:var(--serif);font-weight:400;font-style:italic}
 
 @media (max-width:800px){
   body{padding-bottom:62px}
-  .topbar{height:70px;grid-template-columns:1fr auto;gap:16px;padding:0 16px}
-  .topbar.scrolled{height:64px}
-  .wordmark img{width:118px}
+  .topbar{height:78px;grid-template-columns:1fr auto;gap:16px;padding:0 16px}
+  .topbar.scrolled{height:72px}
+  .wordmark{width:150px;height:60px;padding:5px 10px}
+  .wordmark img{width:136px;max-height:50px}
+  .topbar.scrolled .wordmark{width:142px;height:56px}
+  .topbar.scrolled .wordmark img{width:128px;max-height:46px}
   .book-link{display:none}
   .menu-button{display:flex;position:relative;z-index:3;width:42px;height:42px;border:1px solid var(--line);background:transparent;align-items:center;justify-content:center;flex-direction:column;gap:6px}
   .menu-button>span{width:18px;height:1px;background:#111;transition:.25s}
@@ -225,9 +231,9 @@ em{font-family:var(--serif);font-weight:400;font-style:italic}
   .nav.open{opacity:1;visibility:visible;transform:none}
   .nav a{width:100%;padding:16px 0;border-bottom:1px solid var(--line);font-family:var(--serif);font-size:34px;font-weight:400;letter-spacing:-.03em}
   .nav a span{font-family:var(--sans);font-size:9px}
-  .hero{padding-top:70px;min-height:760px}
-  .hero::before{inset:70px 0 0;background-size:20vw 20vw}
-  .hero-index{top:94px;left:16px}
+  .hero{padding-top:78px;min-height:760px}
+  .hero::before{inset:78px 0 0;background-size:20vw 20vw}
+  .hero-index{top:103px;left:16px}
   .hero-type{inset:45% 10px auto}
   .hero-line span{font-size:24vw}
   .hero-line em{font-size:7px}
