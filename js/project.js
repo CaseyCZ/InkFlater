@@ -43,6 +43,22 @@
   navLinks.forEach(link => link.addEventListener('click', closeMenu));
 
   const sections = navLinks.map(link => document.querySelector(link.getAttribute('href'))).filter(Boolean);
+  const heroType = document.querySelector('.hero-type');
+
+  if (heroType && window.matchMedia('(min-width: 801px) and (prefers-reduced-motion: no-preference)').matches) {
+    let ticking = false;
+    const moveHeroType = () => {
+      const shift = Math.min(window.scrollY * 0.045, 24);
+      heroType.style.translate = '0 ' + shift + 'px';
+      ticking = false;
+    };
+    window.addEventListener('scroll', () => {
+      if (!ticking) {
+        requestAnimationFrame(moveHeroType);
+        ticking = true;
+      }
+    }, {passive:true});
+  }
 
   if ('IntersectionObserver' in window) {
     const revealObserver = new IntersectionObserver(entries => {
