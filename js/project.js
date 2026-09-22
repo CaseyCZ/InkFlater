@@ -1,691 +1,129 @@
-$(document).ready(function(){
+(() => {
+  const body = document.body;
+  const header = document.getElementById('site-header');
+  const menuButton = document.querySelector('.menu-toggle');
+  const nav = document.getElementById('main-nav');
+  const navLinks = [...document.querySelectorAll('.main-nav a')];
 
-// Navigation Section Change //
+  const setHeader = () => {
+    header.classList.toggle('scrolled', window.scrollY > 20);
+  };
+  setHeader();
+  window.addEventListener('scroll', setHeader, { passive: true });
 
-var aChildren = $(".navigation li").children();
-var aArray = [];
-for (var i=0; i < aChildren.length; i++) {    
-  var aChild = aChildren[i];
-  var ahref = $(aChild).attr('href');
-  aArray.push(ahref);
-};
+  const closeMenu = () => {
+    menuButton.setAttribute('aria-expanded', 'false');
+    nav.classList.remove('open');
+    body.classList.remove('menu-open');
+  };
 
-$(window).scroll(function(){
-
-  var windowPos = $(window).scrollTop();
-  var windowHeight = $(window).height();
-  var docHeight = $(document).height();
-
-  for (var i=0; i < aArray.length; i++) {
-    var theID = aArray[i];
-    var divPos = $(theID);
-    if (divPos.length) {
-      if($(window).width() > 980){
-        var divPos = divPos.offset().top - 70;
-      } else{
-        var divPos = divPos.offset().top - 84;
-      } 
-    }
-    if($(window).width() > 980){
-      var divHeight = $(theID).height() + 70;
-    } else{
-      var divHeight = $(theID).height() + 84;
-    } 
-    if (windowPos >= divPos && windowPos < (divPos + divHeight)) {
-        $("a[href='" + theID + "']").parent().addClass("menu__item--current").siblings().removeClass("menu__item--current");
-    } else {
-        $("a[href='" + theID + "']").parent().removeClass("menu__item--current");
-    }
-  }
-});
-
-// Navigation Scroll //
-
-$('.navigation a').click(function(event) {
-  var id = $(this).attr("href");
-  var target = $(id).offset().top;
-  if($(window).width() > 980){
-    $('html, body').animate({
-        scrollTop: target - 69
-    }, 1000, 'easeInExpo');
-  } else{
-    $('html, body').animate({
-        scrollTop: target - 83
-    }, 1000, 'easeInExpo');
-  }
-  event.preventDefault();
-});
-
-// Menu
-
-(function() {
-	[].slice.call(document.querySelectorAll('.menu')).forEach(function(menu) {
-		var menuItems = menu.querySelectorAll('.menu__link'),
-		setCurrent = function(ev) {
-			ev.preventDefault();
-			var item = ev.target.parentNode;
-			if (classie.has(item, 'menu__item--current')) {
-				return false;
-			}
-			classie.remove(menu.querySelector('.menu__item--current'), 'menu__item--current');
-			classie.add(item, 'menu__item--current');
-		}
-	});
-})(window);
-
-// Sticky Header //
-
-$(window).scroll(function(){
-
-	if($(window).scrollTop() > 20){
-		$('.header').addClass('sticky');
-	} else{
-		$('.header').removeClass('sticky');
-	}	
-
-});
-
-// Slider //
-
-var slider = new MasterSlider();
-slider.setup('masterslider' , {
-  width:1920,
-  height:800,
-  loop:true,
-  autoplay:true,
-  fullwidth:true,
-  overPause:false,
-  centerControls:false,
-  speed:16,
-  view:'fade'
-});
-slider.control('bullets' ,{autohide:false });
-
-// Carousel //
-
-$(".carousel").owlCarousel({
-  responsive: true,
-  stopOnHover: true,
-  autoPlay: 3000,
-  pagination: true,
-  navigation : true,
-  items : 3,
-  itemsDesktop : [1199,3],
-  itemsDesktopSmall : [1100,2],
-  itemsTablet: [760,1],
-  itemsMobile : false
-});
-
-// Video Player for Youtube //
-
-var player;
-
-function onYouTubeIframeAPIReady() {
-  player = new YT.Player('video', {
-    events: {
-      'onReady': onPlayerReady
-    }
+  menuButton.addEventListener('click', () => {
+    const open = menuButton.getAttribute('aria-expanded') !== 'true';
+    menuButton.setAttribute('aria-expanded', String(open));
+    nav.classList.toggle('open', open);
+    body.classList.toggle('menu-open', open);
   });
-}
 
-function onPlayerReady(event) {
-  var playButton = document.getElementById("play-video");
-  playButton.addEventListener("click", function() {
-    player.playVideo();
+  navLinks.forEach(link => link.addEventListener('click', closeMenu));
+
+  document.addEventListener('keydown', event => {
+    if (event.key === 'Escape' && nav.classList.contains('open')) closeMenu();
   });
-}
 
-var tag = document.createElement('script');
-tag.src = "https://www.youtube.com/iframe_api";
-var firstScriptTag = document.getElementsByTagName('script')[0];
-firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+  const sections = navLinks
+    .map(link => document.querySelector(link.getAttribute('href')))
+    .filter(Boolean);
 
-$('#play-video').on('click', function(){
-  $('.video-layer').fadeOut();
-});
+  if ('IntersectionObserver' in window) {
+    const sectionObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        const id = '#' + entry.target.id;
+        navLinks.forEach(link => {
+          link.classList.toggle('active', link.getAttribute('href') === id);
+        });
+      });
+    }, { rootMargin: '-30% 0px -58% 0px', threshold: 0 });
 
-// Grid Isotope //
+    sections.forEach(section => sectionObserver.observe(section));
 
-$('img').on('load', function(){
-  $('.grid').isotope({
-    itemSelector: '.grid-item',
-    layoutMode: 'masonry',
-    isOriginLeft: true,
-    percentPosition: true,
-    transitionDuration: '0.5s'
-  });
-  $('.isotope-tabs a').on( 'click', function() {
-    $('.isotope-tabs').find('.active').removeClass('active');
-    $(this).addClass('active');
-    $filterValue = $(this).attr('data-filter');
-    $('.grid').isotope({ filter: $filterValue });
-  });
-})
-
-// Lightbox //
-
-$(".gallery-item").fancybox({
-  padding: 0,
-  openEffect : 'elastic',
-  openSpeed  : 350,
-  closeEffect : 'elastic',
-  closeSpeed  : 350
-});
-
-$(".open-lightbox").fancybox({padding:7});
-
-// Form Validate //
-
-$('.number-field').numeric();
-
-$('.contact_form').validate({
-  rules: {
-    name: {
-      required: true,
-      minlength: 2
-    },
-    email: {
-      required: true,
-      minlength: 5,
-      email:true
-    },
-    mobile: {
-      required: true,
-      minlength: 5,
-      number:true
-    },
-    subject: {
-      required: true,
-      minlength: 2
-    },
-    message: {
-      required: true,
-      minlength: 8
-    },
-  },
-  messages: {
-    name: "Please enter your name",
-    email: "Please enter your email address",
-    mobile: "Please enter your mobile number",
-    subject: "Please enter your message subject",
-    message: "Please write your message"
-  },
-  errorPlacement: function(error, element) {
-    error.insertAfter(element);
-  },
-  submitHandler: function (form) {
-    if($('.samanira_secure').val() == '') {
-    	$('.contact_form :input').prop('disabled', true);
-		$('.thank-you').fadeIn();
-    } else {
-      $('.contact_form input[type="submit"]').prop('disabled', true);
-      return false;
-    }
-  }
-
-});
-
-// Mobile Items //
-
-$('.nav-toggle').on('click', function(){
-  $('.navigation').toggleClass('active');
-  $('body').toggleClass('hidden-overflow');
-});
-
-$('.menu__link').on('click', function(){
-  if($('.navigation').hasClass('active')){
-    $('.navigation').removeClass('active');
-    $('body').removeClass('hidden-overflow');
-    $('.nav-toggle').removeClass('active');
-  }
-});
-
-// Show Hand Helper
-
-$.fn.isScrollable = function () {
-    return this[0].scrollWidth > this[0].clientWidth;
-};
-
-if($(window).width() < 560){
-  if($('.isotope-tabs').isScrollable()){
-    $('.isotope-tabs').append('<span class="hand"></span>');
-    var handScroll = (function() {
-      var executed = false;
-      return function () {
-        if (!executed) {
-          executed = true;
-          var item_width = $('.isotope-tabs').outerWidth();
-          $('.hand').addClass('shown');
-          setTimeout(function(){
-            $('.hand').addClass('active');
-            $(".isotope-tabs").animate({scrollLeft: item_width}, 2100);
-          },500);
-          setTimeout(function(){
-            $(".isotope-tabs").animate({scrollLeft: 0}, 600);
-            setTimeout(function(){
-              $('.hand').removeClass('active');
-              setTimeout(function(){
-                $('.hand').removeClass('shown');
-              },500);
-            },2000);
-          },500);
+    const revealObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          revealObserver.unobserve(entry.target);
         }
-      };
-    })();
-  }
+      });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
 
-  $(window).scroll(function(){
-    var windowPos = $(window).scrollTop();
-    var windowHeight = $(window).height();
-    var docHeight = $(document).height();
-    var divPos = $('.has-isotope').offset().top;
-    var divHeight = $('.has-isotope').height();
-      if(windowPos >= divPos && windowPos < (divPos + divHeight)) {
-        handScroll();
-      }
-  });  
-}
-
-// Hide Header on on scroll down //
-
-var didScroll;
-var lastScrollTop = 0;
-var delta = 5;
-var navbarHeight = $('.header').outerHeight();
-
-$(window).scroll(function(event){
-  didScroll = true;
-});
-
-setInterval(function() {
-  if (didScroll) {
-    hasScrolled();
-    didScroll = false;
-  }
-}, 250);
-
-function hasScrolled() {
-  var st = $(this).scrollTop();
-  
-  if(Math.abs(lastScrollTop - st) <= delta)
-      return;
-  if (st > lastScrollTop && st > navbarHeight){
-    // Scroll Down
-    $('.header').removeClass('nav-down').addClass('nav-up');
+    document.querySelectorAll('.reveal').forEach((element, index) => {
+      element.style.transitionDelay = Math.min((index % 4) * 55, 165) + 'ms';
+      revealObserver.observe(element);
+    });
   } else {
-    // Scroll Up
-    if(st + $(window).height() < $(document).height()) {
-      $('.header').removeClass('nav-up').addClass('nav-down');
-    }
+    document.querySelectorAll('.reveal').forEach(element => element.classList.add('visible'));
   }
-  lastScrollTop = st;
-}
 
-// Google Map //
+  const year = document.getElementById('year');
+  if (year) year.textContent = new Date().getFullYear();
 
-var map;
-var studiotime = new google.maps.LatLng(42.4943981,45.451405);
+  const galleryImages = [
+    ['images/items/item-1.jpg', 'InkFlater · 01'],
+    ['images/items/item-2.jpg', 'InkFlater · 02'],
+    ['images/items/item-3.jpg', 'InkFlater · 03'],
+    ['images/items/item-4.jpg', 'InkFlater · 04'],
+    ['images/items/item-5.jpg', 'InkFlater · 05'],
+    ['images/items/item-6.jpg', 'InkFlater · 06'],
+    ['images/items/item-7.jpg', 'InkFlater · 07'],
+    ['images/items/item-8.jpg', 'InkFlater · 08']
+  ];
 
-function initialize() {
+  const dialog = document.getElementById('lightbox');
+  const dialogImage = document.getElementById('lightbox-image');
+  const dialogCaption = document.getElementById('lightbox-caption');
+  const closeButton = document.querySelector('.lightbox-close');
+  const prevButton = document.querySelector('.lightbox-prev');
+  const nextButton = document.querySelector('.lightbox-next');
+  let currentIndex = 0;
 
-  var roadAtlasStyles = [
-    {
-        "featureType": "landscape.man_made",
-        "elementType": "geometry",
-        "stylers": [
-            {
-                "visibility": "on"
-            },
-            {
-                "hue": "#ff0000"
-            }
-        ]
-    },
-    {
-        "featureType": "landscape.man_made",
-        "elementType": "geometry.fill",
-        "stylers": [
-            {
-                "visibility": "on"
-            },
-            {
-                "color": "#f7f1df"
-            }
-        ]
-    },
-    {
-        "featureType": "landscape.man_made",
-        "elementType": "geometry.stroke",
-        "stylers": [
-            {
-                "visibility": "on"
-            },
-            {
-                "hue": "#ff0000"
-            },
-            {
-                "weight": "1.25"
-            }
-        ]
-    },
-    {
-        "featureType": "landscape.natural",
-        "elementType": "geometry",
-        "stylers": [
-            {
-                "color": "#d0e3b4"
-            }
-        ]
-    },
-    {
-        "featureType": "landscape.natural.terrain",
-        "elementType": "geometry",
-        "stylers": [
-            {
-                "visibility": "off"
-            }
-        ]
-    },
-    {
-        "featureType": "poi",
-        "elementType": "labels",
-        "stylers": [
-            {
-                "visibility": "off"
-            }
-        ]
-    },
-    {
-        "featureType": "poi.attraction",
-        "elementType": "all",
-        "stylers": [
-            {
-                "visibility": "simplified"
-            }
-        ]
-    },
-    {
-        "featureType": "poi.business",
-        "elementType": "all",
-        "stylers": [
-            {
-                "hue": "#ff0000"
-            }
-        ]
-    },
-    {
-        "featureType": "poi.medical",
-        "elementType": "geometry",
-        "stylers": [
-            {
-                "color": "#fbd3da"
-            }
-        ]
-    },
-    {
-        "featureType": "poi.park",
-        "elementType": "all",
-        "stylers": [
-            {
-                "visibility": "on"
-            }
-        ]
-    },
-    {
-        "featureType": "poi.park",
-        "elementType": "geometry",
-        "stylers": [
-            {
-                "color": "#bde6ab"
-            }
-        ]
-    },
-    {
-        "featureType": "poi.place_of_worship",
-        "elementType": "all",
-        "stylers": [
-            {
-                "visibility": "on"
-            }
-        ]
-    },
-    {
-        "featureType": "road",
-        "elementType": "geometry.stroke",
-        "stylers": [
-            {
-                "visibility": "off"
-            }
-        ]
-    },
-    {
-        "featureType": "road",
-        "elementType": "labels",
-        "stylers": [
-            {
-                "visibility": "off"
-            }
-        ]
-    },
-    {
-        "featureType": "road.highway",
-        "elementType": "geometry.fill",
-        "stylers": [
-            {
-                "color": "#ffe15f"
-            }
-        ]
-    },
-    {
-        "featureType": "road.highway",
-        "elementType": "geometry.stroke",
-        "stylers": [
-            {
-                "color": "#efd151"
-            }
-        ]
-    },
-    {
-        "featureType": "road.arterial",
-        "elementType": "geometry.fill",
-        "stylers": [
-            {
-                "color": "#ffffff"
-            }
-        ]
-    },
-    {
-        "featureType": "road.arterial",
-        "elementType": "labels.text",
-        "stylers": [
-            {
-                "visibility": "on"
-            }
-        ]
-    },
-    {
-        "featureType": "road.local",
-        "elementType": "geometry.fill",
-        "stylers": [
-            {
-                "color": "black"
-            }
-        ]
-    },
-    {
-        "featureType": "road.local",
-        "elementType": "labels.text",
-        "stylers": [
-            {
-                "visibility": "simplified"
-            }
-        ]
-    },
-    {
-        "featureType": "transit",
-        "elementType": "all",
-        "stylers": [
-            {
-                "visibility": "on"
-            }
-        ]
-    },
-    {
-        "featureType": "transit",
-        "elementType": "geometry",
-        "stylers": [
-            {
-                "visibility": "simplified"
-            }
-        ]
-    },
-    {
-        "featureType": "transit",
-        "elementType": "labels",
-        "stylers": [
-            {
-                "visibility": "simplified"
-            }
-        ]
-    },
-    {
-        "featureType": "transit.line",
-        "elementType": "all",
-        "stylers": [
-            {
-                "visibility": "simplified"
-            }
-        ]
-    },
-    {
-        "featureType": "transit.station",
-        "elementType": "all",
-        "stylers": [
-            {
-                "visibility": "on"
-            }
-        ]
-    },
-    {
-        "featureType": "transit.station",
-        "elementType": "labels.text",
-        "stylers": [
-            {
-                "visibility": "on"
-            }
-        ]
-    },
-    {
-        "featureType": "transit.station.airport",
-        "elementType": "all",
-        "stylers": [
-            {
-                "visibility": "on"
-            }
-        ]
-    },
-    {
-        "featureType": "transit.station.airport",
-        "elementType": "geometry.fill",
-        "stylers": [
-            {
-                "color": "#cfb2db"
-            }
-        ]
-    },
-    {
-        "featureType": "transit.station.bus",
-        "elementType": "all",
-        "stylers": [
-            {
-                "visibility": "on"
-            }
-        ]
-    },
-    {
-        "featureType": "transit.station.rail",
-        "elementType": "all",
-        "stylers": [
-            {
-                "visibility": "on"
-            }
-        ]
-    },
-    {
-        "featureType": "transit.station.rail",
-        "elementType": "labels.text",
-        "stylers": [
-            {
-                "weight": "10.00"
-            }
-        ]
-    },
-    {
-        "featureType": "transit.station.rail",
-        "elementType": "labels.text.fill",
-        "stylers": [
-            {
-                "color": "#00c0ff"
-            }
-        ]
-    },
-    {
-        "featureType": "water",
-        "elementType": "geometry",
-        "stylers": [
-            {
-                "color": "#a2daf2"
-            }
-        ]
-    }
-]
+  const renderLightbox = index => {
+    currentIndex = (index + galleryImages.length) % galleryImages.length;
+    const item = galleryImages[currentIndex];
+    dialogImage.src = item[0];
+    dialogImage.alt = 'Tetovanie InkFlater – fotografia ' + (currentIndex + 1);
+    dialogCaption.textContent = item[1] + ' · ' + (currentIndex + 1) + '/' + galleryImages.length;
+  };
 
-var mapOptions = {
-  zoom: 5,
-  scrollwheel: false,
-  center: studiotime,
-  mapTypeControlOptions: {
-      mapTypeIds: [google.maps.MapTypeId.ROADMAP, 'usroadatlas']
-  }
-};
-
-map = new google.maps.Map(document.getElementById('map_canvas'),
-mapOptions);
-
-var mapCanvas = document.getElementById('map_canvas');
-var myLatlng = new google.maps.LatLng(41.7943981,44.822222);
-var image = 'images/icons/marker.png';
-var marker = new google.maps.Marker({
-position: myLatlng,
-map: map,
-icon: image
-
-});
-
-marker.setAnimation(google.maps.Animation.BOUNCE);
-var styledMapOptions = {
-    
-};
-
-var usRoadMapType = new google.maps.StyledMapType(
-roadAtlasStyles, styledMapOptions);
-
-map.mapTypes.set('usroadatlas', usRoadMapType);
-map.setMapTypeId('usroadatlas');
-}
-
-var getDirection = (function(marker) {
-  var executed = false;
-  return function() {
-    if (!executed) {
-      executed = true;
-      initialize();
+  const openLightbox = index => {
+    renderLightbox(index);
+    if (typeof dialog.showModal === 'function') {
+      dialog.showModal();
+      body.classList.add('lightbox-open');
     }
   };
+
+  const closeLightbox = () => {
+    if (dialog.open) dialog.close();
+    body.classList.remove('lightbox-open');
+  };
+
+  document.querySelectorAll('[data-gallery-index]').forEach(card => {
+    card.addEventListener('click', () => openLightbox(Number(card.dataset.galleryIndex)));
+  });
+
+  closeButton.addEventListener('click', closeLightbox);
+  prevButton.addEventListener('click', () => renderLightbox(currentIndex - 1));
+  nextButton.addEventListener('click', () => renderLightbox(currentIndex + 1));
+
+  dialog.addEventListener('click', event => {
+    if (event.target === dialog) closeLightbox();
+  });
+
+  dialog.addEventListener('close', () => body.classList.remove('lightbox-open'));
+
+  document.addEventListener('keydown', event => {
+    if (!dialog.open) return;
+    if (event.key === 'ArrowLeft') renderLightbox(currentIndex - 1);
+    if (event.key === 'ArrowRight') renderLightbox(currentIndex + 1);
+  });
 })();
-
-$('.get-direction').on('click', function(){
-  getDirection();
-});
-
-});
