@@ -64,7 +64,7 @@ Pred väčšími zmenami boli vytvorené samostatné záložné vetvy:
 - `backup-before-redesign-2026-09-22` – pôvodná verzia webu pred redesignom,
 - `backup-redesign-v0.2.0` – prvý tmavý redesign pred prechodom na editorial verziu 0.3.0.
 
-Díky tomu je možné sa k obom starším variantom kedykoľvek vrátiť.
+Vďaka tomu je možné sa k obom starším variantom kedykoľvek vrátiť.
 
 ## Štruktúra projektu
 
