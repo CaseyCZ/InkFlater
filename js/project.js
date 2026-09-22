@@ -43,9 +43,113 @@
   navLinks.forEach(link => link.addEventListener('click', closeMenu));
 
   const sections = navLinks.map(link => document.querySelector(link.getAttribute('href'))).filter(Boolean);
+  const hero = document.querySelector('.hero');
   const heroType = document.querySelector('.hero-type');
+  const heroPhotos = [...document.querySelectorAll('.hero-photo')];
+  const heroMotionQuery = window.matchMedia('(min-width: 801px) and (prefers-reduced-motion: no-preference)');
+  let wanderGeneration = 0;
+  let resizeTimer;
 
-  if (heroType && window.matchMedia('(min-width: 801px) and (prefers-reduced-motion: no-preference)').matches) {
+  const randomBetween = (min, max) => Math.random() * (max - min) + min;
+
+  const startRandomHeroMotion = () => {
+    wanderGeneration += 1;
+    const generation = wanderGeneration;
+
+    heroPhotos.forEach(photo => {
+      photo.getAnimations().forEach(animation => animation.cancel());
+      photo.classList.remove('is-wandering');
+      photo.style.transform = '';
+      photo.style.left = '';
+      photo.style.top = '';
+      photo.style.right = '';
+      photo.style.bottom = '';
+    });
+
+    if (!hero || !heroMotionQuery.matches) return;
+
+    const heroRect = hero.getBoundingClientRect();
+
+    heroPhotos.forEach((photo, index) => {
+      const rect = photo.getBoundingClientRect();
+      const baseLeft = rect.left - heroRect.left;
+      const baseTop = rect.top - heroRect.top;
+
+      photo.style.left = baseLeft + 'px';
+      photo.style.top = baseTop + 'px';
+      photo.style.right = 'auto';
+      photo.style.bottom = 'auto';
+      photo.style.transform = 'translate3d(0,0,0) rotate(0deg)';
+      photo.classList.add('is-wandering');
+
+      let currentX = 0;
+      let currentY = 0;
+      let currentRot = index === 0 ? -4 : index === 1 ? 3 : 5;
+
+      const wander = async () => {
+        while (generation === wanderGeneration && heroMotionQuery.matches) {
+          const heroWidth = hero.clientWidth;
+          const heroHeight = hero.clientHeight;
+          const photoWidth = photo.offsetWidth;
+          const photoHeight = photo.offsetHeight;
+
+          const minLeft = 12;
+          const maxLeft = Math.max(minLeft, heroWidth - photoWidth - 12);
+          const minTop = Math.max(104, window.innerWidth > 1050 ? 112 : 96);
+          const maxTop = Math.max(minTop, heroHeight - photoHeight - 34);
+
+          let targetLeft = randomBetween(minLeft, maxLeft);
+          let targetTop = randomBetween(minTop, maxTop);
+
+          // Avoid tiny moves: every segment should visibly travel somewhere new.
+          for (let attempt = 0; attempt < 8; attempt += 1) {
+            const currentLeft = baseLeft + currentX;
+            const currentTop = baseTop + currentY;
+            const distance = Math.hypot(targetLeft - currentLeft, targetTop - currentTop);
+            const minimumDistance = Math.min(heroWidth, heroHeight) * 0.22;
+            if (distance >= minimumDistance) break;
+            targetLeft = randomBetween(minLeft, maxLeft);
+            targetTop = randomBetween(minTop, maxTop);
+          }
+
+          const targetX = targetLeft - baseLeft;
+          const targetY = targetTop - baseTop;
+          const targetRot = randomBetween(-7, 7);
+          const duration = randomBetween(8500, 14500);
+
+          const animation = photo.animate(
+            [
+              { transform: `translate3d(${currentX}px,${currentY}px,0) rotate(${currentRot}deg)` },
+              { transform: `translate3d(${targetX}px,${targetY}px,0) rotate(${targetRot}deg)` }
+            ],
+            {
+              duration,
+              easing: 'cubic-bezier(.45,0,.55,1)',
+              fill: 'forwards'
+            }
+          );
+
+          try {
+            await animation.finished;
+          } catch {
+            return;
+          }
+
+          if (generation !== wanderGeneration) return;
+
+          currentX = targetX;
+          currentY = targetY;
+          currentRot = targetRot;
+          photo.style.transform = `translate3d(${currentX}px,${currentY}px,0) rotate(${currentRot}deg)`;
+          animation.cancel();
+        }
+      };
+
+      wander();
+    });
+  };
+
+  if (heroType && heroMotionQuery.matches) {
     let ticking = false;
     const moveHeroType = () => {
       const shift = Math.min(window.scrollY * 0.045, 24);
@@ -59,6 +163,14 @@
       }
     }, {passive:true});
   }
+
+  startRandomHeroMotion();
+
+  heroMotionQuery.addEventListener?.('change', startRandomHeroMotion);
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(startRandomHeroMotion, 250);
+  }, {passive:true});
 
   if ('IntersectionObserver' in window) {
     const revealObserver = new IntersectionObserver(entries => {
