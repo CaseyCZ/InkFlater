@@ -29,3 +29,8 @@ InkFlater-Tattoo Raslavice
 Toplianska 709/54, 086 41 Raslavice  
 Instagram: https://www.instagram.com/ink_flater/  
 Facebook: https://www.facebook.com/inkFlater/
+
+
+### Zálohy
+- `backup-before-redesign-2026-09-22` – pôvodný web
+- `backup-redesign-v0.2.0` – prvý tmavý redesign
