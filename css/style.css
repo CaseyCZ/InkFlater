@@ -207,7 +207,7 @@ p{color:var(--muted)}
 .reveal.visible{opacity:1;transform:none}
 
 @media (max-width:1000px){
-  :root{--shell:min(100% - 34px,1180px)}
+  :root{--shell:min(calc(100% - 34px),1180px)}
   .site-header{height:76px;background:rgba(8,8,8,.75);backdrop-filter:blur(16px)}
   .site-header.scrolled{height:68px}
   .header-inner{grid-template-columns:1fr auto auto;gap:18px}
