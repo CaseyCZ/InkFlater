@@ -1,18 +1,34 @@
 (() => {
   const body = document.body;
-  const header = document.getElementById('site-header');
-  const menuButton = document.querySelector('.menu-toggle');
-  const nav = document.getElementById('main-nav');
-  const navLinks = [...document.querySelectorAll('.main-nav a')];
+  const topbar = document.getElementById('topbar');
+  const menuButton = document.querySelector('.menu-button');
+  const nav = document.getElementById('nav');
+  const navLinks = [...document.querySelectorAll('.nav a')];
+  const dialog = document.getElementById('lightbox');
+  const dialogImage = document.getElementById('lightbox-image');
+  const dialogCaption = document.getElementById('lightbox-caption');
+  const closeButton = document.querySelector('.lightbox-close');
+  const prevButton = document.querySelector('.lightbox-prev');
+  const nextButton = document.querySelector('.lightbox-next');
+  let currentIndex = 0;
 
-  const setHeader = () => {
-    header.classList.toggle('scrolled', window.scrollY > 20);
-  };
+  const gallery = [
+    ['images/items/item-1.jpg','WORK / 001'],
+    ['images/items/item-2.jpg','WORK / 002'],
+    ['images/items/item-3.jpg','WORK / 003'],
+    ['images/items/item-4.jpg','WORK / 004'],
+    ['images/items/item-5.jpg','WORK / 005'],
+    ['images/items/item-6.jpg','WORK / 006'],
+    ['images/items/item-7.jpg','WORK / 007'],
+    ['images/items/item-8.jpg','WORK / 008']
+  ];
+
+  const setHeader = () => topbar.classList.toggle('scrolled', window.scrollY > 18);
   setHeader();
-  window.addEventListener('scroll', setHeader, { passive: true });
+  window.addEventListener('scroll', setHeader, {passive:true});
 
   const closeMenu = () => {
-    menuButton.setAttribute('aria-expanded', 'false');
+    menuButton.setAttribute('aria-expanded','false');
     nav.classList.remove('open');
     body.classList.remove('menu-open');
   };
@@ -26,76 +42,46 @@
 
   navLinks.forEach(link => link.addEventListener('click', closeMenu));
 
-  document.addEventListener('keydown', event => {
-    if (event.key === 'Escape' && nav.classList.contains('open')) closeMenu();
-  });
-
-  const sections = navLinks
-    .map(link => document.querySelector(link.getAttribute('href')))
-    .filter(Boolean);
+  const sections = navLinks.map(link => document.querySelector(link.getAttribute('href'))).filter(Boolean);
 
   if ('IntersectionObserver' in window) {
-    const sectionObserver = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        if (!entry.isIntersecting) return;
-        const id = '#' + entry.target.id;
-        navLinks.forEach(link => {
-          link.classList.toggle('active', link.getAttribute('href') === id);
-        });
-      });
-    }, { rootMargin: '-30% 0px -58% 0px', threshold: 0 });
-
-    sections.forEach(section => sectionObserver.observe(section));
-
     const revealObserver = new IntersectionObserver(entries => {
       entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-          revealObserver.unobserve(entry.target);
-        }
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add('visible');
+        revealObserver.unobserve(entry.target);
       });
-    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+    }, {threshold:.08, rootMargin:'0px 0px -7% 0px'});
 
-    document.querySelectorAll('.reveal').forEach((element, index) => {
-      element.style.transitionDelay = Math.min((index % 4) * 55, 165) + 'ms';
-      revealObserver.observe(element);
+    document.querySelectorAll('.reveal').forEach((el, i) => {
+      el.style.transitionDelay = Math.min((i % 4) * 45, 135) + 'ms';
+      revealObserver.observe(el);
     });
+
+    const navObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        const hash = '#' + entry.target.id;
+        navLinks.forEach(link => link.classList.toggle('active', link.getAttribute('href') === hash));
+      });
+    }, {rootMargin:'-35% 0px -55% 0px'});
+
+    sections.forEach(section => navObserver.observe(section));
   } else {
-    document.querySelectorAll('.reveal').forEach(element => element.classList.add('visible'));
+    document.querySelectorAll('.reveal').forEach(el => el.classList.add('visible'));
   }
 
-  const year = document.getElementById('year');
-  if (year) year.textContent = new Date().getFullYear();
+  document.getElementById('year').textContent = new Date().getFullYear();
 
-  const galleryImages = [
-    ['images/items/item-1.jpg', 'InkFlater · 01'],
-    ['images/items/item-2.jpg', 'InkFlater · 02'],
-    ['images/items/item-3.jpg', 'InkFlater · 03'],
-    ['images/items/item-4.jpg', 'InkFlater · 04'],
-    ['images/items/item-5.jpg', 'InkFlater · 05'],
-    ['images/items/item-6.jpg', 'InkFlater · 06'],
-    ['images/items/item-7.jpg', 'InkFlater · 07'],
-    ['images/items/item-8.jpg', 'InkFlater · 08']
-  ];
-
-  const dialog = document.getElementById('lightbox');
-  const dialogImage = document.getElementById('lightbox-image');
-  const dialogCaption = document.getElementById('lightbox-caption');
-  const closeButton = document.querySelector('.lightbox-close');
-  const prevButton = document.querySelector('.lightbox-prev');
-  const nextButton = document.querySelector('.lightbox-next');
-  let currentIndex = 0;
-
-  const renderLightbox = index => {
-    currentIndex = (index + galleryImages.length) % galleryImages.length;
-    const item = galleryImages[currentIndex];
-    dialogImage.src = item[0];
-    dialogImage.alt = 'Tetovanie InkFlater – fotografia ' + (currentIndex + 1);
-    dialogCaption.textContent = item[1] + ' · ' + (currentIndex + 1) + '/' + galleryImages.length;
+  const render = index => {
+    currentIndex = (index + gallery.length) % gallery.length;
+    dialogImage.src = gallery[currentIndex][0];
+    dialogImage.alt = 'Tetovanie InkFlater – ' + (currentIndex + 1);
+    dialogCaption.textContent = gallery[currentIndex][1] + ' / ' + (currentIndex + 1) + ' OF ' + gallery.length;
   };
 
   const openLightbox = index => {
-    renderLightbox(index);
+    render(index);
     if (typeof dialog.showModal === 'function') {
       dialog.showModal();
       body.classList.add('lightbox-open');
@@ -112,18 +98,15 @@
   });
 
   closeButton.addEventListener('click', closeLightbox);
-  prevButton.addEventListener('click', () => renderLightbox(currentIndex - 1));
-  nextButton.addEventListener('click', () => renderLightbox(currentIndex + 1));
-
-  dialog.addEventListener('click', event => {
-    if (event.target === dialog) closeLightbox();
-  });
-
+  prevButton.addEventListener('click', () => render(currentIndex - 1));
+  nextButton.addEventListener('click', () => render(currentIndex + 1));
+  dialog.addEventListener('click', e => { if (e.target === dialog) closeLightbox(); });
   dialog.addEventListener('close', () => body.classList.remove('lightbox-open'));
 
-  document.addEventListener('keydown', event => {
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && nav.classList.contains('open')) closeMenu();
     if (!dialog.open) return;
-    if (event.key === 'ArrowLeft') renderLightbox(currentIndex - 1);
-    if (event.key === 'ArrowRight') renderLightbox(currentIndex + 1);
+    if (e.key === 'ArrowLeft') render(currentIndex - 1);
+    if (e.key === 'ArrowRight') render(currentIndex + 1);
   });
 })();
