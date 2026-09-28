@@ -46,7 +46,8 @@
   const hero = document.querySelector('.hero');
   const heroType = document.querySelector('.hero-type');
   const heroPhotos = [...document.querySelectorAll('.hero-photo')];
-  const heroMotionQuery = window.matchMedia('(min-width: 801px) and (prefers-reduced-motion: no-preference)');
+  const heroMotionQuery = window.matchMedia('(min-width: 801px)');
+  const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
   let wanderGeneration = 0;
   let resizeTimer;
 
@@ -98,24 +99,34 @@
           const minTop = Math.max(104, window.innerWidth > 1050 ? 112 : 96);
           const maxTop = Math.max(minTop, heroHeight - photoHeight - 34);
 
-          let targetLeft = randomBetween(minLeft, maxLeft);
-          let targetTop = randomBetween(minTop, maxTop);
+          const reducedMotion = reducedMotionQuery.matches;
+          const currentLeft = baseLeft + currentX;
+          const currentTop = baseTop + currentY;
+
+          let targetLeft = reducedMotion
+            ? Math.min(maxLeft, Math.max(minLeft, currentLeft + randomBetween(-120, 120)))
+            : randomBetween(minLeft, maxLeft);
+          let targetTop = reducedMotion
+            ? Math.min(maxTop, Math.max(minTop, currentTop + randomBetween(-90, 90)))
+            : randomBetween(minTop, maxTop);
 
           // Avoid tiny moves: every segment should visibly travel somewhere new.
           for (let attempt = 0; attempt < 8; attempt += 1) {
-            const currentLeft = baseLeft + currentX;
-            const currentTop = baseTop + currentY;
             const distance = Math.hypot(targetLeft - currentLeft, targetTop - currentTop);
-            const minimumDistance = Math.min(heroWidth, heroHeight) * 0.22;
+            const minimumDistance = Math.min(heroWidth, heroHeight) * (reducedMotion ? 0.05 : 0.22);
             if (distance >= minimumDistance) break;
-            targetLeft = randomBetween(minLeft, maxLeft);
-            targetTop = randomBetween(minTop, maxTop);
+            targetLeft = reducedMotion
+              ? Math.min(maxLeft, Math.max(minLeft, currentLeft + randomBetween(-120, 120)))
+              : randomBetween(minLeft, maxLeft);
+            targetTop = reducedMotion
+              ? Math.min(maxTop, Math.max(minTop, currentTop + randomBetween(-90, 90)))
+              : randomBetween(minTop, maxTop);
           }
 
           const targetX = targetLeft - baseLeft;
           const targetY = targetTop - baseTop;
-          const targetRot = randomBetween(-7, 7);
-          const duration = randomBetween(8500, 14500);
+          const targetRot = reducedMotion ? randomBetween(-2, 2) : randomBetween(-7, 7);
+          const duration = reducedMotion ? randomBetween(16000, 22000) : randomBetween(8500, 14500);
 
           const animation = photo.animate(
             [
@@ -149,7 +160,7 @@
     });
   };
 
-  if (heroType && heroMotionQuery.matches) {
+  if (heroType && heroMotionQuery.matches && !reducedMotionQuery.matches) {
     let ticking = false;
     const moveHeroType = () => {
       const shift = Math.min(window.scrollY * 0.045, 24);
@@ -167,6 +178,7 @@
   startRandomHeroMotion();
 
   heroMotionQuery.addEventListener?.('change', startRandomHeroMotion);
+  reducedMotionQuery.addEventListener?.('change', startRandomHeroMotion);
   window.addEventListener('resize', () => {
     clearTimeout(resizeTimer);
     resizeTimer = setTimeout(startRandomHeroMotion, 250);
