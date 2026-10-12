@@ -2,10 +2,10 @@
 html,body{max-width:100%;overflow-x:clip}
 
 @media (min-width:801px){
-  .wordmark{width:190px}
-  .wordmark img{width:190px}
-  .topbar.scrolled .wordmark{width:170px}
-  .topbar.scrolled .wordmark img{width:170px}
+  .wordmark{width:150px}
+  .wordmark img{width:150px}
+  .topbar.scrolled .wordmark{width:135px}
+  .topbar.scrolled .wordmark img{width:135px}
 }
 
 .work{overflow:hidden}
@@ -14,6 +14,11 @@ html,body{max-width:100%;overflow-x:clip}
 .work-card img{max-width:100%}
 
 @media (max-width:800px){
+  .wordmark{width:150px!important}
+  .wordmark img{width:150px!important}
+  .topbar.scrolled .wordmark{width:140px!important}
+  .topbar.scrolled .wordmark img{width:140px!important}
+
   .menu-button{
     z-index:110!important;
     background:#090909!important;
