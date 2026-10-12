@@ -56,7 +56,7 @@ InkFlater je zároveň laureátom **Orly Body Artu 2025**.
 Ukážky realizácií nájdeš na webe a ďalšie aktuálne práce na Instagrame.
 
 - Web: https://caseycz.github.io/InkFlater/#work
-- Instagram: https://www.instagram.com/ink_flater/
+- Instagram: https://www.instagram.com/ink_flater_tattoo/
 - Facebook: https://www.facebook.com/inkFlater/
 
 ## Rezervácia a kontakt
@@ -69,7 +69,7 @@ Toplianska 709/54
 
 - **Telefón:** +421 949 698 018
 - **E-mail:** adam.kucinsky@gmail.com
-- **Instagram:** https://www.instagram.com/ink_flater/
+- **Instagram:** https://www.instagram.com/ink_flater_tattoo/
 - **Facebook:** https://www.facebook.com/inkFlater/
 
 ---
