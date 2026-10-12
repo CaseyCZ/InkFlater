@@ -2,10 +2,10 @@
 html,body{max-width:100%;overflow-x:clip}
 
 @media (min-width:801px){
-  .wordmark{width:200px}
-  .wordmark img{width:200px}
-  .topbar.scrolled .wordmark{width:180px}
-  .topbar.scrolled .wordmark img{width:180px}
+  .wordmark{width:190px}
+  .wordmark img{width:190px}
+  .topbar.scrolled .wordmark{width:170px}
+  .topbar.scrolled .wordmark img{width:170px}
 }
 
 .work{overflow:hidden}
@@ -14,7 +14,41 @@ html,body{max-width:100%;overflow-x:clip}
 .work-card img{max-width:100%}
 
 @media (max-width:800px){
-  .menu-button{background:var(--paper-2)!important;border:1px solid rgba(10,10,10,.45)!important;box-shadow:0 2px 10px rgba(0,0,0,.08)}
-  .menu-button>span{background:#111!important}
+  .menu-button{
+    z-index:110!important;
+    background:#090909!important;
+    border:1px solid #090909!important;
+    box-shadow:0 3px 14px rgba(0,0,0,.18)!important;
+  }
+  .menu-button>span{
+    width:20px!important;
+    height:2px!important;
+    background:#fff!important;
+  }
+
+  .nav{
+    position:fixed!important;
+    z-index:100!important;
+    top:0!important;
+    left:0!important;
+    right:auto!important;
+    bottom:auto!important;
+    width:100vw!important;
+    height:100dvh!important;
+    min-height:100dvh!important;
+    max-height:none!important;
+    padding:110px 28px 90px!important;
+    background:#e9e2d8!important;
+    background-color:#e9e2d8!important;
+    overflow-y:auto!important;
+    opacity:0;
+    visibility:hidden;
+  }
+  .nav.open{
+    opacity:1!important;
+    visibility:visible!important;
+    background:#e9e2d8!important;
+  }
+
   .work-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
