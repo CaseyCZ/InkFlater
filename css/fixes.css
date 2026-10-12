@@ -1,12 +1,37 @@
 /* Responsive/header fixes */
 html,body{max-width:100%;overflow-x:clip}
 
+/* Logo */
 @media (min-width:801px){
-  .wordmark{width:150px}
-  .wordmark img{width:150px}
-  .topbar.scrolled .wordmark{width:135px}
-  .topbar.scrolled .wordmark img{width:135px}
+  .wordmark{width:130px}
+  .wordmark img{width:130px}
+  .topbar.scrolled .wordmark{width:120px}
+  .topbar.scrolled .wordmark img{width:120px}
 }
+
+/* Improve readability of small UI/body text on desktop and mobile */
+.topbar-meta{font-size:10px}
+.nav a,.book-link{font-size:13px}
+.hero-index,.hero-side-note,.artist-label{font-size:10px}
+.section-number{font-size:12px}
+.section-top>div:first-child p,.kicker{font-size:10px}
+.section-note{font-size:15px;line-height:1.55}
+.hero-copy a,.under-link{font-size:12px}
+.hero-photo figcaption{font-size:9px}
+.work-no,.work-open{font-size:9px}
+.work-footer{font-size:13px}
+.work-footer p{color:#aaa}
+.artist-copy>p:not(.kicker):not(.artist-lead){font-size:15px;line-height:1.65}
+.proof-left p,.proof-main p{font-size:10px}
+.proof>a{font-size:11px}
+.process-row p{font-size:15px;line-height:1.6}
+.first-notes p{font-size:15px;line-height:1.55}
+.contact-head p{font-size:11px}
+.contact-cta{font-size:15px}
+.contact-data small{font-size:10px;color:#aaa}
+.contact-data p{font-size:14px;line-height:1.8;color:#eee}
+.footer-left p,.footer-mid,.footer-right{font-size:10px;color:#b0b0b0}
+.mobile-bar a{font-size:11px}
 
 .work{overflow:hidden}
 .work-grid{grid-template-columns:repeat(12,minmax(0,1fr));width:100%;max-width:100%;overflow:hidden}
@@ -14,10 +39,10 @@ html,body{max-width:100%;overflow-x:clip}
 .work-card img{max-width:100%}
 
 @media (max-width:800px){
-  .wordmark{width:150px!important}
-  .wordmark img{width:150px!important}
-  .topbar.scrolled .wordmark{width:140px!important}
-  .topbar.scrolled .wordmark img{width:140px!important}
+  .wordmark{width:130px!important}
+  .wordmark img{width:130px!important}
+  .topbar.scrolled .wordmark{width:120px!important}
+  .topbar.scrolled .wordmark img{width:120px!important}
 
   .menu-button{
     z-index:110!important;
@@ -54,6 +79,15 @@ html,body{max-width:100%;overflow-x:clip}
     visibility:visible!important;
     background:#e9e2d8!important;
   }
+
+  .section-note,
+  .artist-copy>p:not(.kicker):not(.artist-lead),
+  .process-row p,
+  .first-notes p{font-size:16px}
+  .contact-data p{font-size:15px}
+  .contact-data small{font-size:11px}
+  .footer-left p,.footer-mid,.footer-right{font-size:11px}
+  .mobile-bar a{font-size:12px}
 
   .work-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
